@@ -12,7 +12,7 @@ class WebViewController: NSViewController, WKNavigationDelegate {
     
     var webView: WKWebView!
     var initialURL: URL!
-    var didFinishNavigation: (() -> Void)?
+    var didFinishNavigation: ((URL?, String, Error?) -> Void)?
     
     let defaultTimeoutInterval: Double = 300
     let defaultCachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData
@@ -40,6 +40,7 @@ class WebViewController: NSViewController, WKNavigationDelegate {
         super.viewDidLoad()
         let wkWbViewConfig = WKWebViewConfiguration()
         self.webView = WKWebView(frame: view.frame, configuration: wkWbViewConfig)
+        self.webView.navigationDelegate = self
         if let initialURL = self.initialURL {
             self.webView.load(URLRequest(url: initialURL, cachePolicy: defaultCachePolicy, timeoutInterval: defaultTimeoutInterval))
         }
@@ -90,13 +91,15 @@ class WebViewController: NSViewController, WKNavigationDelegate {
     
     // caricamento contenuti da server terminato
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!){
+        
         webView.evaluateJavaScript("document.getElementsByTagName('html')[0].innerHTML") { innerHTML, error in
-            if let innHTML = innerHTML {
-                print(innHTML)
+            var unwrappedInnerHTML: String = ""
+            if let innHTML = innerHTML as? String {
+                unwrappedInnerHTML = innHTML
             }
-        }
-        if let didFinishNavigation = self.didFinishNavigation {
-            didFinishNavigation()
+            if let didFinishNavigation = self.didFinishNavigation {
+                didFinishNavigation(webView.url, unwrappedInnerHTML, error)
+            }
         }
     }
     

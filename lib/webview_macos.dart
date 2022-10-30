@@ -17,6 +17,10 @@ class WebviewMacos {
     return WebviewMacosPlatform.instance.evaluateJavaScript(jsString);
   }
 
+  Future<void> didFinish(Function(String, String, bool) didFinish) {
+    return WebviewMacosPlatform.instance.didFinish(didFinish);
+  }
+
   Future<void> dismissWebView() {
     return WebviewMacosPlatform.instance.dismissWebView();
   }

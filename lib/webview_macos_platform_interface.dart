@@ -39,6 +39,10 @@ abstract class WebviewMacosPlatform extends PlatformInterface {
     throw UnimplementedError('evaluateJavaScript() has not been implemented.');
   }
 
+  Future<void> didFinish(Function(String, String, bool) onFinish) {
+    throw UnimplementedError('didFinish() has not been implemented.');
+  }
+
   Future<void> dismissWebView() {
     throw UnimplementedError('dismissWebView() has not been implemented.');
   }

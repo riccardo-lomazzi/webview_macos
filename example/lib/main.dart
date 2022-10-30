@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_macos/webview_macos.dart';
+import 'package:random_string/random_string.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,6 +18,7 @@ class _MyAppState extends State<MyApp> {
   late TextEditingController urlController;
   late TextEditingController javaScriptController;
   String javascriptResult = "";
+  String didFinishResult = "";
 
   @override
   void initState() {
@@ -60,9 +62,38 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         await WebviewMacos().showWebView(
                             urlController.text.toLowerCase().trim());
+                        await WebviewMacos().didFinish(
+                            (String url, String html, bool hasFinished) {
+                          setState(() {
+                            didFinishResult = "CURRENT URL: $url \n" + html;
+                          });
+                        });
                       },
                     ),
                   ],
+                ),
+                Container(
+                  height: 80,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "DidFinish Result",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Divider(),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Text(
+                            didFinishResult,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Row(
                   children: [

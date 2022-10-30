@@ -7,9 +7,6 @@ class MockNewWebviewMacosPlatform
     with MockPlatformInterfaceMixin
     implements WebviewMacosPlatform {
   @override
-  Future<String?> getPlatformVersion() => Future.value('42');
-
-  @override
   Future<void> dismissWebView() {
     throw UnimplementedError();
   }
@@ -31,6 +28,11 @@ class MockNewWebviewMacosPlatform
 
   @override
   Future<void> showWebView(String initialURL) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> didFinish(Function(String, String, bool) didFinish) {
     throw UnimplementedError();
   }
 }

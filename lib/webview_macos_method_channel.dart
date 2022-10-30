@@ -9,6 +9,9 @@ class MethodChannelWebviewMacos extends WebviewMacosPlatform {
   @visibleForTesting
   final methodChannel = const MethodChannel('webview_macos_plugin');
 
+  bool methodCallHandlerHasBeenSet = false;
+  Function(String, String, bool)? didFinishCallback;
+
   @override
   Future<void> showWebView(String initialURL) async {
     final _ = await methodChannel.invokeMethod('showWebView', initialURL);
@@ -36,8 +39,39 @@ class MethodChannelWebviewMacos extends WebviewMacosPlatform {
   }
 
   @override
+  Future<void> didFinish(Function(String, String, bool) didFinish) async {
+    if (!methodCallHandlerHasBeenSet) {
+      methodChannel.setMethodCallHandler(this._genericMethodHandler);
+      methodCallHandlerHasBeenSet = true;
+    }
+    didFinishCallback = didFinish;
+    final bool _ = await methodChannel.invokeMethod("didFinish") ?? false;
+    return;
+  }
+
+  @override
   Future<void> dismissWebView() async {
     final _ = await methodChannel.invokeMethod('dismissWebView');
     return;
+  }
+
+  Future<void> _genericMethodHandler(MethodCall call) async {
+    switch (call.method) {
+      case "didFinish":
+        if (didFinishCallback != null) {
+          String resp = "";
+          String url = "";
+          if (call.arguments is List<dynamic>) {
+            url = (call.arguments[0] ?? "") as String;
+            resp = (call.arguments[1] ?? "") as String;
+          } else if (call.arguments is FlutterError) {
+            resp = (call.arguments as FlutterError).toString();
+          }
+          didFinishCallback!(url, resp, true);
+        }
+        break;
+      default:
+        break;
+    }
   }
 }
