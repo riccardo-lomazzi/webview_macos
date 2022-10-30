@@ -7,7 +7,7 @@ import 'webview_macos_platform_interface.dart';
 class MethodChannelWebviewMacos extends WebviewMacosPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('new_webview_macos');
+  final methodChannel = const MethodChannel('webview_macos_plugin');
 
   @override
   Future<void> showWebView(String initialURL) async {

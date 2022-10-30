@@ -3,7 +3,7 @@
 # Run `pod lib lint new_webview_macos.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'new_webview_macos'
+  s.name             = 'webview_macos'
   s.version          = '0.0.1'
   s.summary          = 'A new Flutter plugin project.'
   s.description      = <<-DESC

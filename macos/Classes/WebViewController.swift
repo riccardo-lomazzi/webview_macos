@@ -65,7 +65,11 @@ class WebViewController: NSViewController, WKNavigationDelegate {
         }
         webView.evaluateJavaScript(jsString) { result, error in
             guard let res = result as? String else {
-                completionHandler("ERROR", WebViewError(code: "INVALID_RESULT", message: "Result is not a string"))
+                if let err = error {
+                    completionHandler("ERROR", err)
+                } else {
+                    completionHandler("ERROR", WebViewError(code: "INVALID_RESULT", message: "Result is not a string"))
+                }
                 return
             }
             if let err = error {

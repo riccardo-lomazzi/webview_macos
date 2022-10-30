@@ -14,12 +14,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String initialURL = "https://www.google.it";
-  late TextEditingController controller;
+  late TextEditingController urlController;
+  late TextEditingController javaScriptController;
+  String javascriptResult = "";
 
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController(text: initialURL);
+    urlController = TextEditingController(text: initialURL);
+    javaScriptController = TextEditingController(
+      text: "document.getElementsByTagName('body')[0].innerHTML",
+    );
   }
 
   @override
@@ -30,23 +35,93 @@ class _MyAppState extends State<MyApp> {
           title: Text('Plugin example app'),
         ),
         body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text('Press the button to open the WebView'),
-              TextField(
-                controller: controller,
-              ),
-              MaterialButton(
-                child: Text("Open WebView".toUpperCase()),
-                onPressed: () async {
-                  await WebviewMacos()
-                      .showWebView(controller.text.toLowerCase().trim());
-                },
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('Open the WebView before evaluating Javascript'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: urlController,
+                        decoration: InputDecoration(
+                          labelText: "URL",
+                        ),
+                      ),
+                    ),
+                    MaterialButton(
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      child: Text("Open WebView".toUpperCase()),
+                      onPressed: () async {
+                        await WebviewMacos().showWebView(
+                            urlController.text.toLowerCase().trim());
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: javaScriptController,
+                        decoration: InputDecoration(
+                          labelText: "Evaluate Javascript",
+                        ),
+                      ),
+                    ),
+                    MaterialButton(
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      child: Text("Evaluate Javascript".toUpperCase()),
+                      onPressed: () async {
+                        String? result = await WebviewMacos()
+                            .evaluateJavaScript(
+                                javaScriptController.text.trim());
+                        setState(() {
+                          javascriptResult = result ?? "Error";
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 80,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Javascript result",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Divider(),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Text(
+                            javascriptResult,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                MaterialButton(
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                  child: Text("Close WebView".toUpperCase()),
+                  onPressed: () async {
+                    WebviewMacos().dismissWebView();
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -4,7 +4,8 @@ import WebKit
 
 public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
     
-    var webViewController: WebViewController!
+    var webViewController: WebViewController?
+    var windowController: NSWindowController?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "webview_macos_plugin", binaryMessenger: registrar.messenger)
@@ -30,7 +31,7 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
                 webViewController.initialURL = url
                 _ = webViewController.loadURL(url: url)
             }
-            context.presentInNewWindow(viewController: webViewController)
+            windowController = context.presentInNewWindow(viewController: webViewController, title: "WebView")
             result(true)
         case "loadURL":
             guard let webViewController = webViewController, let urlString = call.arguments as? String, let url = URL(string: urlString) else {
@@ -57,11 +58,13 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
                 }
             }
         case "dismissWebView":
-            guard let webViewController = webViewController, let context = NSApplication.shared.keyWindow?.contentViewController else {
+            guard let context = windowController else {
                 result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find view controller", details: nil))
                 return
             }
-            context.dismiss(webViewController)
+            self.webViewController = nil
+            context.close()
+            self.windowController = nil
             result(true)
         default:
             result(FlutterMethodNotImplemented)
