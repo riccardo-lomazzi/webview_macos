@@ -16,7 +16,7 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
     
     public func setupMethodChannel(){
         if methodChannel == nil {
-            guard let context: FlutterViewController = NSApplication.shared.keyWindow?.contentViewController as? FlutterViewController else { return }
+            guard let context: FlutterViewController = NSApplication.mainFlutterController as? FlutterViewController else { return }
             methodChannel = FlutterMethodChannel(name: "webview_macos_plugin", binaryMessenger: context.engine.binaryMessenger)
         }
     }
@@ -32,7 +32,7 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
         setupMethodChannel()
         switch call.method {
         case "showWebView":
-            guard let context = NSApplication.shared.keyWindow?.contentViewController else {
+            guard let context = NSApplication.mainFlutterController else {
                 result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find main view controller", details: nil))
                 return
             }
@@ -72,7 +72,7 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
             }
         case "didFinish":
             guard let webViewController = webViewController else {
-                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find view controller", details: nil))
+                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find web view controller", details: nil))
                 return
             }
             webViewController.didFinishNavigation = { url, innerHTML, error in
@@ -87,7 +87,7 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
             result(true)
         case "dismissWebView":
             guard let context = windowController else {
-                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find view controller", details: nil))
+                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find webview window controller", details: nil))
                 return
             }
             self.webViewController = nil
