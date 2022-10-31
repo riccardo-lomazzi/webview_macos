@@ -32,8 +32,12 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
         setupMethodChannel()
         switch call.method {
         case "showWebView":
-            guard let webViewController = webViewController, let context = NSApplication.shared.keyWindow?.contentViewController else {
-                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find view controller", details: nil))
+            guard let context = NSApplication.shared.keyWindow?.contentViewController else {
+                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find main view controller", details: nil))
+                return
+            }
+            guard let webViewController = webViewController else {
+                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find web view controller", details: nil))
                 return
             }
             if let initialURL = call.arguments as? String, let url = URL(string: initialURL) {
