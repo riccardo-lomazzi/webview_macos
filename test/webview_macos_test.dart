@@ -27,7 +27,7 @@ class MockNewWebviewMacosPlatform
   }
 
   @override
-  Future<void> showWebView(String initialURL) {
+  Future<void> showWebView(String initialURL, [bool reset = true]) {
     throw UnimplementedError();
   }
 

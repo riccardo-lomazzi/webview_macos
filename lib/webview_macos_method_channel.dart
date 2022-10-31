@@ -13,8 +13,9 @@ class MethodChannelWebviewMacos extends WebviewMacosPlatform {
   Function(String, String, bool)? didFinishCallback;
 
   @override
-  Future<void> showWebView(String initialURL) async {
-    final _ = await methodChannel.invokeMethod('showWebView', initialURL);
+  Future<void> showWebView(String initialURL, [bool reset = true]) async {
+    final _ =
+        await methodChannel.invokeMethod('showWebView', [initialURL, reset]);
     return;
   }
 

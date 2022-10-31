@@ -116,7 +116,9 @@ class WebViewController: NSViewController, WKNavigationDelegate {
         decisionHandler(.allow)
     }
     
-    
+    func dispose(){
+        self.view.disposeOfEverySubview()
+    }
 }
 
 struct WebViewError: Error {

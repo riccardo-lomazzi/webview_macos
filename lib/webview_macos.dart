@@ -1,8 +1,8 @@
 import 'webview_macos_platform_interface.dart';
 
 class WebviewMacos {
-  Future<void> showWebView(String initialURL) {
-    return WebviewMacosPlatform.instance.showWebView(initialURL);
+  Future<void> showWebView(String initialURL, [bool reset = true]) {
+    return WebviewMacosPlatform.instance.showWebView(initialURL, reset);
   }
 
   Future<void> loadURL(String url) {

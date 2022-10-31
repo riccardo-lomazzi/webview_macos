@@ -21,8 +21,16 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
         }
     }
     
-    public func setupWebViewController(){
-        if webViewController == nil {
+    public func setupWebViewController(reset: Bool = false){
+        if webViewController == nil || reset {
+            if reset {
+                if let wkController = webViewController {
+                    wkController.dispose()
+                }
+                if let windowController = windowController {
+                    windowController.close()
+                }
+            }
             webViewController = WebViewController()
         }
     }
@@ -36,13 +44,19 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
                 result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find main view controller", details: nil))
                 return
             }
+            
+            if let arguments = call.arguments as? [Any] {
+                if let reset: Bool = arguments[1] as? Bool, reset {
+                    setupWebViewController(reset: true)
+                }
+                if let initialURL = arguments[0] as? String, let url = URL(string: initialURL), let webViewController = webViewController {
+                    webViewController.initialURL = url
+                    _ = webViewController.loadURL(url: url)
+                }
+            }
             guard let webViewController = webViewController else {
                 result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find web view controller", details: nil))
                 return
-            }
-            if let initialURL = call.arguments as? String, let url = URL(string: initialURL) {
-                webViewController.initialURL = url
-                _ = webViewController.loadURL(url: url)
             }
             windowController = context.presentInNewWindow(viewController: webViewController, title: "WebView")
             result(true)

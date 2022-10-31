@@ -23,7 +23,7 @@ abstract class WebviewMacosPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> showWebView(String initialURL) {
+  Future<void> showWebView(String initialURL, [bool reset = true]) {
     throw UnimplementedError('showWebView() has not been implemented.');
   }
 

@@ -25,4 +25,5 @@ extension NSViewController {
         
         return windowVC
     }
+    
 }
