@@ -30,9 +30,9 @@ final String? result = await WebviewMacos().evaluateJavaScript("document.getElem
 ## Limitations and notes
 
 - Multiple instances of the webview are not currently supported.
-- The WebView hasn't got many customizable things, such as single requests cache policy
-- There isn't a WebViewController object of somekind to manage the WebView lifecycle, instead you have to call the single methods.
-- Currently the webview is limited to run to a new window. future developments will include the chance to present the WebView in various ways, such as presentAsSheet.
+- The ```WebView``` object isn't fully customizable, it is limited to "cache reset" single requests.
+- There isn't a ```WebViewController``` object to manage the WebView lifecycle, instead you have to call the single methods.
+- Currently the ```Webview``` is limited to run in a new ```NSWindow```. Future developments will include the chance to present the WebView in various ways, such as ```presentAsSheet```.
 
 ## License
 
