@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:webview_macos/webview_macos.dart';
-import 'package:random_string/random_string.dart';
 
 void main() {
   runApp(const MyApp());
@@ -60,14 +59,21 @@ class _MyAppState extends State<MyApp> {
                       textColor: Colors.white,
                       child: Text("Open WebView".toUpperCase()),
                       onPressed: () async {
-                        await WebviewMacos().showWebView(
-                            urlController.text.toLowerCase().trim());
-                        await WebviewMacos().didFinish(
-                            (String url, String html, bool hasFinished) {
-                          setState(() {
-                            didFinishResult = "CURRENT URL: $url \n" + html;
-                          });
-                        });
+                        WebviewMacos.showWebViewWithArgs(
+                          url: urlController.text.toLowerCase().trim(),
+                          onNavigationCommit:
+                              (String url, String html, FlutterError? error) {},
+                          onNavigationFinished:
+                              (String url, String html, FlutterError? error) {
+                            setState(() {
+                              didFinishResult = "CURRENT URL: $url \n" + html;
+                            });
+                          },
+                          onNavigationError:
+                              (String url, String html, FlutterError? error) {},
+                          onNavigationStart:
+                              (String url, String html, FlutterError? error) {},
+                        );
                       },
                     ),
                   ],

@@ -12,10 +12,15 @@ class WebViewController: NSViewController, WKNavigationDelegate {
     
     var webView: WKWebView!
     var initialURL: URL!
-    var didFinishNavigation: ((URL?, String, Error?) -> Void)?
     
-    let defaultTimeoutInterval: Double = 300
-    let defaultCachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+    var onNavigationStart: ((URL?, String, Error?) -> Void)?
+    var onNavigationCommit: ((URL?, String, Error?) -> Void)?
+    var didFinishNavigation: ((URL?, String, Error?) -> Void)?
+    var onNavigationError: ((URL?, String, Error?) -> Void)?
+    var allowRedirect: Bool = true
+    
+    var defaultTimeoutInterval: Double = 300
+    var defaultCachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData
     
     override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -25,11 +30,14 @@ class WebViewController: NSViewController, WKNavigationDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(initialURL: URL? = nil) {
+    convenience init(initialURL: URL? = nil, defaultTimeoutInterval: Double = 300, defaultCachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData) {
         self.init(nibName: nil, bundle: nil)
         if let initialURL = initialURL {
             self.initialURL = initialURL
         }
+        self.defaultTimeoutInterval = defaultTimeoutInterval
+        self.defaultCachePolicy = defaultCachePolicy
+        
     }
     
     override func loadView() {
@@ -81,39 +89,49 @@ class WebViewController: NSViewController, WKNavigationDelegate {
         }
     }
     
-    // invio richiesta al server
+    // Request start
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
-    }
-    
-    // ricevuto contenuti da server
-    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!){
-    }
-    
-    // caricamento contenuti da server terminato
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!){
-        
-        webView.evaluateJavaScript("document.getElementsByTagName('html')[0].innerHTML") { innerHTML, error in
-            var unwrappedInnerHTML: String = ""
-            if let innHTML = innerHTML as? String {
-                unwrappedInnerHTML = innHTML
-            }
-            if let didFinishNavigation = self.didFinishNavigation {
-                didFinishNavigation(webView.url, unwrappedInnerHTML, error)
+        webView.getInnerHTML { innerHTML, error in
+            if let onNavigationStart = self.onNavigationStart {
+                onNavigationStart(webView.url, innerHTML, error)
             }
         }
     }
     
-    // errore caricamento
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error){
+    // Request commit
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!){
+        webView.getInnerHTML { innerHTML, error in
+            if let onNavigationCommit = self.onNavigationCommit {
+                onNavigationCommit(webView.url, innerHTML, error)
+            }
+        }
     }
     
-    // policy per redirect
+    // Finished loading
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!){
+        webView.getInnerHTML { innerHTML, error in
+            if let didFinishNavigation = self.didFinishNavigation {
+                didFinishNavigation(webView.url, innerHTML, error)
+            }
+        }
+    }
+    
+    // Loading Error
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error){
+        if let onNavigationError = self.onNavigationError {
+            webView.getInnerHTML { innerHTML, error in
+                onNavigationError(webView.url, innerHTML, error)
+            }
+        }
+    }
+    
+    // Redirect Policy
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if navigationAction.navigationType == .linkActivated {
+        if allowRedirect, navigationAction.navigationType == .linkActivated {
             guard let url = navigationAction.request.url else {return}
             webView.load(URLRequest(url: url))
         }
-        decisionHandler(.allow)
+        decisionHandler(allowRedirect ? .allow : .cancel)
     }
     
     func dispose(){

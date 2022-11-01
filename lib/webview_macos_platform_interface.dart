@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'webview_macos_method_channel.dart';
@@ -27,6 +28,20 @@ abstract class WebviewMacosPlatform extends PlatformInterface {
     throw UnimplementedError('showWebView() has not been implemented.');
   }
 
+  Future<void> showWebViewWithArgs({
+    required String url,
+    bool resetPreviousInstance = true,
+    String windowTitle = "",
+    Function(String, String, FlutterError?)? onNavigationStart,
+    Function(String, String, FlutterError?)? onNavigationCommit,
+    Function(String, String, FlutterError?)? onNavigationError,
+    Function(String, String, FlutterError?)? onNavigationFinished,
+    double? windowWidth,
+    double? windowHeight,
+  }) {
+    throw UnimplementedError('showWebView() has not been implemented.');
+  }
+
   Future<void> loadURL(String url) {
     throw UnimplementedError('loadURL() has not been implemented.');
   }
@@ -39,7 +54,7 @@ abstract class WebviewMacosPlatform extends PlatformInterface {
     throw UnimplementedError('evaluateJavaScript() has not been implemented.');
   }
 
-  Future<void> didFinish(Function(String, String, bool) onFinish) {
+  Future<void> didFinish(Function(String, String, FlutterError?) onFinish) {
     throw UnimplementedError('didFinish() has not been implemented.');
   }
 
