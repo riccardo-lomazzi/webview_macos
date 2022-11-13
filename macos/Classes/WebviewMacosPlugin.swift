@@ -2,11 +2,12 @@ import Cocoa
 import FlutterMacOS
 import WebKit
 
-public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
+public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate, NSWindowDelegate {
     
     var webViewController: WebViewController?
     var windowController: NSWindowController?
     var methodChannel: FlutterMethodChannel!
+    var windowIsOpen: Bool = false
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "webview_macos_plugin", binaryMessenger: registrar.messenger)
@@ -143,13 +144,25 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
                     }
                 }
                 
+                if let argOnWebViewOpen = arguments["onWebViewOpened"] as? Bool, argOnWebViewOpen {
+                    webViewController.onWebViewOpened = {
+                        self.windowIsOpen = true
+                        if let methodChannel = self.methodChannel {
+                            methodChannel.invokeMethod("onWebViewOpened", arguments: nil)
+                        }
+                    }
+                }
+                
                 if let initialURL = arguments["url"] as? String, let url = URL(string: initialURL) {
                     webViewController.initialURL = url
                     _ = webViewController.loadURL(url: url)
                 }
             }
-            windowController = context.presentInNewWindow(viewController: webViewController, windowTitle: title, windowSize: windowSize)
-            result(["result" : windowController != nil, "error": nil])
+            
+            let newWindowController: NSWindowController = context.presentInNewWindow(viewController: webViewController, windowTitle: title, windowSize: windowSize)
+            newWindowController.window?.delegate = self
+            windowController = newWindowController
+            result(["result" : true, "error": nil])
         case "loadURL":
             guard let webViewController = webViewController, let urlString = call.arguments as? String, let url = URL(string: urlString) else {
                 result(FlutterError(code: "INVALID_URL", message: "URL is invalid", details: nil))
@@ -174,6 +187,8 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
                     result($0)
                 }
             }
+        case "isShowing":
+            result(self.windowIsOpen)
         case "dismissWebView":
             guard let context = windowController else {
                 result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find webview window controller", details: nil))
@@ -182,11 +197,18 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
             self.webViewController = nil
             context.close()
             self.windowController = nil
+            self.windowIsOpen = false
             result(true)
         default:
             result(FlutterMethodNotImplemented)
         }
     }
     
+    public func windowWillClose(_ notification: Notification) {
+        self.windowIsOpen = false
+        if let methodChannel = self.methodChannel {
+            methodChannel.invokeMethod("onWebViewClosed", arguments: nil)
+        }
+    }
     
 }

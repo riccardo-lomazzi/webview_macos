@@ -25,13 +25,15 @@ abstract class WebviewMacosPlatform extends PlatformInterface {
   }
 
   Future<bool> showWebView({
-    required String url,
+    String? url,
     bool resetPreviousInstance = true,
     String windowTitle = "",
     Function(String, String, FlutterError?)? onNavigationStart,
     Function(String, String, FlutterError?)? onNavigationCommit,
     Function(String, String, FlutterError?)? onNavigationError,
     Function(String, String, FlutterError?)? onNavigationFinished,
+    Function()? onWebViewOpened,
+    Function()? onWebViewClosed,
     double? windowWidth,
     double? windowHeight,
   }) {
@@ -48,6 +50,10 @@ abstract class WebviewMacosPlatform extends PlatformInterface {
 
   Future<String?> evaluateJavaScript(String jsString) {
     throw UnimplementedError('evaluateJavaScript() has not been implemented.');
+  }
+
+  Future<bool> isShowing() {
+    throw UnimplementedError('isShowing() has not been implemented.');
   }
 
   Future<void> dismissWebView() {

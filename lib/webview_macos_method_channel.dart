@@ -10,12 +10,11 @@ class MethodChannelWebviewMacos extends WebviewMacosPlatform {
   final methodChannel = const MethodChannel('webview_macos_plugin');
 
   bool methodCallHandlerHasBeenSet = false;
-  Map<String, dynamic Function(String, String, FlutterError?)?> savedCallbacks =
-      {};
+  Map<String, Function?> savedCallbacks = {};
 
   @override
   Future<bool> showWebView({
-    required String url,
+    String? url,
     bool resetPreviousInstance = true,
     String windowTitle = "WebView",
     double? windowWidth,
@@ -24,6 +23,8 @@ class MethodChannelWebviewMacos extends WebviewMacosPlatform {
     Function(String, String, FlutterError?)? onNavigationCommit,
     Function(String, String, FlutterError?)? onNavigationError,
     Function(String, String, FlutterError?)? onNavigationFinished,
+    Function()? onWebViewOpened,
+    Function()? onWebViewClosed,
   }) async {
     try {
       savedCallbacks.addAll({
@@ -31,6 +32,8 @@ class MethodChannelWebviewMacos extends WebviewMacosPlatform {
         "onNavigationCommit": onNavigationCommit,
         "onNavigationError": onNavigationError,
         "onNavigationFinished": onNavigationFinished,
+        "onWebViewOpened": onWebViewOpened,
+        "onWebViewClosed": onWebViewClosed,
       });
       if (!methodCallHandlerHasBeenSet) {
         methodChannel.setMethodCallHandler(this._genericMethodHandler);
@@ -45,6 +48,8 @@ class MethodChannelWebviewMacos extends WebviewMacosPlatform {
         "onNavigationCommit": onNavigationCommit != null,
         "onNavigationError": onNavigationError != null,
         "onNavigationFinished": onNavigationFinished != null,
+        "onWebViewOpened": onWebViewOpened != null,
+        "onWebViewClosed": onWebViewClosed != null,
       });
       if (showWebViewResponse == null) {
         throw Exception("Failed to start WebView");
@@ -83,6 +88,11 @@ class MethodChannelWebviewMacos extends WebviewMacosPlatform {
   }
 
   @override
+  Future<bool> isShowing() async {
+    return await methodChannel.invokeMethod("isShowing") ?? false;
+  }
+
+  @override
   Future<void> dismissWebView() async {
     final _ = await methodChannel.invokeMethod('dismissWebView');
     return;
@@ -99,6 +109,12 @@ class MethodChannelWebviewMacos extends WebviewMacosPlatform {
       if (savedCallbacks[call.method] != null) {
         savedCallbacks[call.method]!(url, html, error);
       }
+    } else if (call.method == "onWebViewClosed" &&
+        savedCallbacks["onWebViewClosed"] != null) {
+      savedCallbacks["onWebViewClosed"]!();
+    } else if (call.method == "onWebViewOpened" &&
+        savedCallbacks["onWebViewOpened"] != null) {
+      savedCallbacks["onWebViewOpened"]!();
     }
   }
 }

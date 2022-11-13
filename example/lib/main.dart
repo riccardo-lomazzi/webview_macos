@@ -58,11 +58,13 @@ class _MyAppState extends State<MyApp> {
                       color: Colors.blue,
                       textColor: Colors.white,
                       child: Text("Open WebView".toUpperCase()),
-                      onPressed: () {
-                        WebviewMacos.showWebView(
+                      onPressed: () async {
+                        await WebviewMacos.showWebView(
                           url: urlController.text.toLowerCase().trim(),
                           onNavigationStart:
-                              (String url, String html, FlutterError? error) {},
+                              (String url, String html, FlutterError? error) {
+                            setState(() {});
+                          },
                           onNavigationCommit:
                               (String url, String html, FlutterError? error) {},
                           onNavigationFinished:
@@ -77,6 +79,12 @@ class _MyAppState extends State<MyApp> {
                               didFinishResult = "Error: \n" + error.toString();
                             });
                           },
+                          onWebViewOpened: () {
+                            setState(() {});
+                          },
+                          onWebViewClosed: () {
+                            setState(() {});
+                          },
                         );
                       },
                     ),
@@ -88,7 +96,7 @@ class _MyAppState extends State<MyApp> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "DidFinish Result",
+                        "onNavigationFinished Result",
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -105,59 +113,72 @@ class _MyAppState extends State<MyApp> {
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: javaScriptController,
-                        decoration: InputDecoration(
-                          labelText: "Evaluate Javascript",
+                FutureBuilder<bool>(
+                  future: WebviewMacos.isShowing(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError || snapshot.data == false) {
+                      return Container();
+                    }
+                    return Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: javaScriptController,
+                                decoration: InputDecoration(
+                                  labelText: "Evaluate Javascript",
+                                ),
+                              ),
+                            ),
+                            MaterialButton(
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                              child: Text("Evaluate Javascript".toUpperCase()),
+                              onPressed: () async {
+                                String? result =
+                                    await WebviewMacos.evaluateJavaScript(
+                                        javaScriptController.text.trim());
+                                setState(() {
+                                  javascriptResult = result ?? "Error";
+                                });
+                              },
+                            ),
+                          ],
                         ),
-                      ),
-                    ),
-                    MaterialButton(
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      child: Text("Evaluate Javascript".toUpperCase()),
-                      onPressed: () async {
-                        String? result = await WebviewMacos.evaluateJavaScript(
-                            javaScriptController.text.trim());
-                        setState(() {
-                          javascriptResult = result ?? "Error";
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Container(
-                  height: 80,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Javascript result",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Divider(),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Text(
-                            javascriptResult,
+                        Container(
+                          height: 80,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Javascript result",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Divider(),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Text(
+                                    javascriptResult,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                MaterialButton(
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  child: Text("Close WebView".toUpperCase()),
-                  onPressed: () async {
-                    WebviewMacos.dismissWebView();
+                        MaterialButton(
+                          color: Colors.blue,
+                          textColor: Colors.white,
+                          child: Text("Close WebView".toUpperCase()),
+                          onPressed: () async {
+                            WebviewMacos.dismissWebView();
+                          },
+                        ),
+                      ],
+                    );
                   },
                 ),
               ],

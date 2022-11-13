@@ -17,6 +17,7 @@ class WebViewController: NSViewController, WKNavigationDelegate {
     var onNavigationCommit: ((URL?, String, Error?) -> Void)?
     var didFinishNavigation: ((URL?, String, Error?) -> Void)?
     var onNavigationError: ((URL?, String, Error?) -> Void)?
+    var onWebViewOpened: (() -> Void)?
     var allowRedirect: Bool = true
     
     var defaultTimeoutInterval: Double = 300
@@ -46,6 +47,10 @@ class WebViewController: NSViewController, WKNavigationDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewDidAppear() {
+        super.viewDidAppear()
         let wkWbViewConfig = WKWebViewConfiguration()
         self.webView = WKWebView(frame: view.frame, configuration: wkWbViewConfig)
         self.webView.navigationDelegate = self
@@ -53,6 +58,9 @@ class WebViewController: NSViewController, WKNavigationDelegate {
             self.webView.load(URLRequest(url: initialURL, cachePolicy: defaultCachePolicy, timeoutInterval: defaultTimeoutInterval))
         }
         self.view.addSubview(self.webView)
+        if let onWebViewOpened = self.onWebViewOpened {
+            onWebViewOpened()
+        }
     }
     
     func loadURL(url: URL) -> Bool {

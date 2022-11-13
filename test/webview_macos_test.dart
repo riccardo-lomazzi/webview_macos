@@ -28,16 +28,24 @@ class MockNewWebviewMacosPlatform
   }
 
   @override
-  Future<bool> showWebView(
-      {required String url,
-      bool resetPreviousInstance = true,
-      String windowTitle = "",
-      Function(String p1, String p2, FlutterError? p3)? onNavigationStart,
-      Function(String p1, String p2, FlutterError? p3)? onNavigationCommit,
-      Function(String p1, String p2, FlutterError? p3)? onNavigationError,
-      Function(String p1, String p2, FlutterError? p3)? onNavigationFinished,
-      double? windowWidth,
-      double? windowHeight}) {
+  Future<bool> showWebView({
+    String? url,
+    bool resetPreviousInstance = true,
+    String windowTitle = "",
+    Function(String p1, String p2, FlutterError? p3)? onNavigationStart,
+    Function(String p1, String p2, FlutterError? p3)? onNavigationCommit,
+    Function(String p1, String p2, FlutterError? p3)? onNavigationError,
+    Function(String p1, String p2, FlutterError? p3)? onNavigationFinished,
+    double? windowWidth,
+    double? windowHeight,
+    Function()? onWebViewOpened,
+    Function()? onWebViewClosed,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> isShowing() {
     throw UnimplementedError();
   }
 }
