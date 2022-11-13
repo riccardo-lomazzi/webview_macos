@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Plugin example app'),
+          title: Text('WebView MacOS example app'),
         ),
         body: Center(
           child: Padding(
@@ -58,9 +58,11 @@ class _MyAppState extends State<MyApp> {
                       color: Colors.blue,
                       textColor: Colors.white,
                       child: Text("Open WebView".toUpperCase()),
-                      onPressed: () async {
-                        WebviewMacos.showWebViewWithArgs(
+                      onPressed: () {
+                        WebviewMacos.showWebView(
                           url: urlController.text.toLowerCase().trim(),
+                          onNavigationStart:
+                              (String url, String html, FlutterError? error) {},
                           onNavigationCommit:
                               (String url, String html, FlutterError? error) {},
                           onNavigationFinished:
@@ -70,9 +72,11 @@ class _MyAppState extends State<MyApp> {
                             });
                           },
                           onNavigationError:
-                              (String url, String html, FlutterError? error) {},
-                          onNavigationStart:
-                              (String url, String html, FlutterError? error) {},
+                              (String url, String html, FlutterError? error) {
+                            setState(() {
+                              didFinishResult = "Error: \n" + error.toString();
+                            });
+                          },
                         );
                       },
                     ),
@@ -116,9 +120,8 @@ class _MyAppState extends State<MyApp> {
                       textColor: Colors.white,
                       child: Text("Evaluate Javascript".toUpperCase()),
                       onPressed: () async {
-                        String? result = await WebviewMacos()
-                            .evaluateJavaScript(
-                                javaScriptController.text.trim());
+                        String? result = await WebviewMacos.evaluateJavaScript(
+                            javaScriptController.text.trim());
                         setState(() {
                           javascriptResult = result ?? "Error";
                         });
@@ -154,7 +157,7 @@ class _MyAppState extends State<MyApp> {
                   textColor: Colors.white,
                   child: Text("Close WebView".toUpperCase()),
                   onPressed: () async {
-                    WebviewMacos().dismissWebView();
+                    WebviewMacos.dismissWebView();
                   },
                 ),
               ],

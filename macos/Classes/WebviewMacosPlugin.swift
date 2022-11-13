@@ -39,44 +39,44 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
         setupWebViewController()
         setupMethodChannel()
         switch call.method {
+//        case "showWebView":
+//            guard let context = NSApplication.mainFlutterController else {
+//                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find main view controller", details: nil))
+//                return
+//            }
+//            var title: String = "WebView"
+//            var windowSize: CGSize = CGSize.defaultWindowSize
+//            if let arguments = call.arguments as? [Any] {
+//                if let reset: Bool = arguments[1] as? Bool, reset {
+//                    setupWebViewController(reset: true)
+//                }
+//                if let initialURL = arguments[0] as? String, let url = URL(string: initialURL), let webViewController = webViewController {
+//                    webViewController.initialURL = url
+//                    _ = webViewController.loadURL(url: url)
+//                }
+//                if let argTitle = arguments[2] as? String {
+//                    title = argTitle
+//                }
+//                if let argWidth = arguments[3] as? Double {
+//                    windowSize.width = argWidth
+//                }
+//                if let argHeight = arguments[4] as? Double {
+//                    windowSize.height = argHeight
+//                }
+//            }
+//            guard let webViewController = webViewController else {
+//                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find web view controller", details: nil))
+//                return
+//            }
+//            windowController = context.presentInNewWindow(viewController: webViewController, windowTitle: title, windowSize: windowSize)
+//            result(true)
         case "showWebView":
             guard let context = NSApplication.mainFlutterController else {
-                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find main view controller", details: nil))
-                return
-            }
-            var title: String = "WebView"
-            var windowSize: CGSize = CGSize.defaultWindowSize
-            if let arguments = call.arguments as? [Any] {
-                if let reset: Bool = arguments[1] as? Bool, reset {
-                    setupWebViewController(reset: true)
-                }
-                if let initialURL = arguments[0] as? String, let url = URL(string: initialURL), let webViewController = webViewController {
-                    webViewController.initialURL = url
-                    _ = webViewController.loadURL(url: url)
-                }
-                if let argTitle = arguments[2] as? String {
-                    title = argTitle
-                }
-                if let argWidth = arguments[3] as? Double {
-                    windowSize.width = argWidth
-                }
-                if let argHeight = arguments[4] as? Double {
-                    windowSize.height = argHeight
-                }
-            }
-            guard let webViewController = webViewController else {
-                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find web view controller", details: nil))
-                return
-            }
-            windowController = context.presentInNewWindow(viewController: webViewController, windowTitle: title, windowSize: windowSize)
-            result(true)
-        case "showWebViewWithArgs":
-            guard let context = NSApplication.mainFlutterController else {
-                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find main view controller", details: nil))
+                result(["result": false, "error": FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find main view controller", details: nil)])
                 return
             }
             guard let webViewController = webViewController else {
-                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find web view controller", details: nil))
+                result(["result": false, "error": FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find web view controller", details: nil)])
                 return
             }
             var title: String = "WebView"
@@ -85,10 +85,7 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
                 if let resetPreviousInstance: Bool = arguments["resetPreviousInstance"] as? Bool, resetPreviousInstance {
                     setupWebViewController(reset: true)
                 }
-                if let initialURL = arguments["url"] as? String, let url = URL(string: initialURL) {
-                    webViewController.initialURL = url
-                    _ = webViewController.loadURL(url: url)
-                }
+                
                 if let argTitle = arguments["windowTitle"] as? String {
                     title = argTitle
                 }
@@ -105,8 +102,7 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
                             if let error = error {
                                 fError = FlutterError(code: "ON_START_ERROR", message: error.localizedDescription, details: nil)
                             }
-                                methodChannel.invokeMethod("onNavigationStart", arguments: [url?.absoluteString ?? "", innerHTML, fError])
-                            
+                            methodChannel.invokeMethod("onNavigationStart", arguments: ["url": url?.absoluteString ?? "", "innerHTML":  innerHTML, "error": fError?.toMap])
                         }
                     }
                 }
@@ -114,11 +110,23 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
                 if let argNavCommit = arguments["onNavigationCommit"] as? Bool, argNavCommit {
                     webViewController.onNavigationCommit = { url, innerHTML, error in
                         if let methodChannel = self.methodChannel {
+                            var fError: FlutterError? = nil
                             if let error = error {
-                                methodChannel.invokeMethod("onNavigationCommit", arguments: FlutterError(code: "ON_COMMIT_ERROR", message: error.localizedDescription, details: nil))
-                            } else {
-                                methodChannel.invokeMethod("onNavigationCommit", arguments: [url?.absoluteString ?? "", innerHTML])
+                                fError = FlutterError(code: "ON_COMMIT_ERROR", message: error.localizedDescription, details: nil)
                             }
+                            methodChannel.invokeMethod("onNavigationCommit", arguments: ["url": url?.absoluteString ?? "", "innerHTML": innerHTML, "error": fError?.toMap])
+                        }
+                    }
+                }
+                
+                if let argNavFinished = arguments["onNavigationFinished"] as? Bool, argNavFinished {
+                    webViewController.onNavigationCommit = { url, innerHTML, error in
+                        if let methodChannel = self.methodChannel {
+                            var fError: FlutterError? = nil
+                            if let error = error {
+                                fError = FlutterError(code: "ON_DID_FINISH_ERROR", message: error.localizedDescription, details: nil)
+                            }
+                            methodChannel.invokeMethod("onNavigationFinished", arguments: ["url": url?.absoluteString ?? "", "innerHTML": innerHTML, "error": fError?.toMap])
                         }
                     }
                 }
@@ -126,14 +134,22 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
                 if let argNavError = arguments["onNavigationError"] as? Bool, argNavError {
                     webViewController.onNavigationError = { url, innerHTML, error in
                         if let methodChannel = self.methodChannel {
-                            methodChannel.invokeMethod("onNavigationError", arguments: [url?.absoluteString ?? "", innerHTML, FlutterError(code: "NAVIGATION_ERROR", message: error?.localizedDescription ?? "", details: nil)])
+                            var fError: FlutterError? = nil
+                            if let error = error {
+                                fError = FlutterError(code: "ON_NAVIGATION_ERROR", message: error.localizedDescription, details: nil)
+                            }
+                            methodChannel.invokeMethod("onNavigationError", arguments: ["url": url?.absoluteString ?? "", "innerHTML": innerHTML, "error": fError?.toMap])
                         }
                     }
                 }
+                
+                if let initialURL = arguments["url"] as? String, let url = URL(string: initialURL) {
+                    webViewController.initialURL = url
+                    _ = webViewController.loadURL(url: url)
+                }
             }
-            
             windowController = context.presentInNewWindow(viewController: webViewController, windowTitle: title, windowSize: windowSize)
-            result(windowController != nil)
+            result(["result" : windowController != nil, "error": nil])
         case "loadURL":
             guard let webViewController = webViewController, let urlString = call.arguments as? String, let url = URL(string: urlString) else {
                 result(FlutterError(code: "INVALID_URL", message: "URL is invalid", details: nil))
@@ -158,21 +174,6 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate {
                     result($0)
                 }
             }
-        case "didFinish":
-            guard let webViewController = webViewController else {
-                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find web view controller", details: nil))
-                return
-            }
-            webViewController.didFinishNavigation = { url, innerHTML, error in
-                if let methodChannel = self.methodChannel {
-                    if let error = error {
-                        methodChannel.invokeMethod("didFinish", arguments: FlutterError(code: "DID_FINISH_ERROR", message: error.localizedDescription, details: nil))
-                    } else {
-                        methodChannel.invokeMethod("didFinish", arguments: [url?.absoluteString ?? "", innerHTML])
-                    }
-                }
-            }
-            result(true)
         case "dismissWebView":
             guard let context = windowController else {
                 result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find webview window controller", details: nil))

@@ -18,27 +18,17 @@ class MockNewWebviewMacosPlatform
   }
 
   @override
-  Future<void> loadHTMLString(String htmlString) {
+  Future<bool> loadHTMLString(String htmlString) {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> loadURL(String url) {
+  Future<bool> loadURL(String url) {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> showWebView(String initialURL, [bool reset = true]) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> didFinish(Function(String, String, FlutterError?) didFinish) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> showWebViewWithArgs(
+  Future<bool> showWebView(
       {required String url,
       bool resetPreviousInstance = true,
       String windowTitle = "",

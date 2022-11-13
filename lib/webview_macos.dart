@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import 'webview_macos_platform_interface.dart';
 
 class WebviewMacos {
-  Future<void> showWebView(String initialURL, [bool reset = true]) {
-    return WebviewMacosPlatform.instance.showWebView(initialURL, reset);
-  }
-
-  static Future<void> showWebViewWithArgs({
+  static Future<bool> showWebView({
     required String url,
     bool resetPreviousInstance = true,
     String windowTitle = "WebView",
@@ -16,7 +12,7 @@ class WebviewMacos {
     Function(String, String, FlutterError?)? onNavigationError,
     Function(String, String, FlutterError?)? onNavigationFinished,
   }) async {
-    return WebviewMacosPlatform.instance.showWebViewWithArgs(
+    return WebviewMacosPlatform.instance.showWebView(
       url: url,
       resetPreviousInstance: resetPreviousInstance,
       windowTitle: windowTitle,
@@ -27,23 +23,19 @@ class WebviewMacos {
     );
   }
 
-  static Future<void> loadURL(String url) {
+  static Future<bool> loadURL(String url) {
     return WebviewMacosPlatform.instance.loadURL(url);
   }
 
-  Future<void> loadHTMLString(String htmlString) {
+  static Future<bool> loadHTMLString(String htmlString) {
     return WebviewMacosPlatform.instance.loadHTMLString(htmlString);
   }
 
-  Future<String?> evaluateJavaScript(String jsString) {
+  static Future<String?> evaluateJavaScript(String jsString) {
     return WebviewMacosPlatform.instance.evaluateJavaScript(jsString);
   }
 
-  Future<void> didFinish(Function(String, String, FlutterError?) didFinish) {
-    return WebviewMacosPlatform.instance.didFinish(didFinish);
-  }
-
-  Future<void> dismissWebView() {
+  static Future<void> dismissWebView() {
     return WebviewMacosPlatform.instance.dismissWebView();
   }
 }

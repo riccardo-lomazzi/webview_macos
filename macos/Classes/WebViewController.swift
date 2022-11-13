@@ -41,7 +41,7 @@ class WebViewController: NSViewController, WKNavigationDelegate {
     }
     
     override func loadView() {
-        self.view = NSView(frame: CGRect(x: 0, y: 0, width: 1000, height: 600))
+        self.view = NSView(frame: CGRect.defaultWindowSize)
     }
     
     override func viewDidLoad() {
@@ -126,13 +126,16 @@ class WebViewController: NSViewController, WKNavigationDelegate {
     }
     
     // Redirect Policy
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if allowRedirect, navigationAction.navigationType == .linkActivated {
-            guard let url = navigationAction.request.url else {return}
-            webView.load(URLRequest(url: url))
-        }
-        decisionHandler(allowRedirect ? .allow : .cancel)
-    }
+//    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+//        if allowRedirect, navigationAction.navigationType == .linkActivated {
+//            guard let url = navigationAction.request.url else {
+//                decisionHandler(.allow)
+//                return
+//            }
+//            webView.load(URLRequest(url: url))
+//        }
+//        decisionHandler(allowRedirect ? .allow : .cancel)
+//    }
     
     func dispose(){
         self.view.disposeOfEverySubview()

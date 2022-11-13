@@ -24,11 +24,7 @@ abstract class WebviewMacosPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> showWebView(String initialURL, [bool reset = true]) {
-    throw UnimplementedError('showWebView() has not been implemented.');
-  }
-
-  Future<void> showWebViewWithArgs({
+  Future<bool> showWebView({
     required String url,
     bool resetPreviousInstance = true,
     String windowTitle = "",
@@ -42,20 +38,16 @@ abstract class WebviewMacosPlatform extends PlatformInterface {
     throw UnimplementedError('showWebView() has not been implemented.');
   }
 
-  Future<void> loadURL(String url) {
+  Future<bool> loadURL(String url) {
     throw UnimplementedError('loadURL() has not been implemented.');
   }
 
-  Future<void> loadHTMLString(String htmlString) {
+  Future<bool> loadHTMLString(String htmlString) {
     throw UnimplementedError('loadHTMLString() has not been implemented.');
   }
 
   Future<String?> evaluateJavaScript(String jsString) {
     throw UnimplementedError('evaluateJavaScript() has not been implemented.');
-  }
-
-  Future<void> didFinish(Function(String, String, FlutterError?) onFinish) {
-    throw UnimplementedError('didFinish() has not been implemented.');
   }
 
   Future<void> dismissWebView() {
