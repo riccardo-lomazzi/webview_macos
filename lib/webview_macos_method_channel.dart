@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:webview_macos/exceptions.dart';
 
 import 'webview_macos_platform_interface.dart';
 
@@ -19,10 +20,10 @@ class MethodChannelWebviewMacos extends WebviewMacosPlatform {
     String windowTitle = "WebView",
     double? windowWidth,
     double? windowHeight,
-    Function(String, String, FlutterError?)? onNavigationStart,
-    Function(String, String, FlutterError?)? onNavigationCommit,
-    Function(String, String, FlutterError?)? onNavigationError,
-    Function(String, String, FlutterError?)? onNavigationFinished,
+    Function(String, String, WebViewMacOSException?)? onNavigationStart,
+    Function(String, String, WebViewMacOSException?)? onNavigationCommit,
+    Function(String, String, WebViewMacOSException?)? onNavigationError,
+    Function(String, String, WebViewMacOSException?)? onNavigationFinished,
     Function()? onWebViewOpened,
     Function()? onWebViewClosed,
   }) async {
@@ -101,11 +102,13 @@ class MethodChannelWebviewMacos extends WebviewMacosPlatform {
   Future<void> _genericMethodHandler(MethodCall call) async {
     String url = "";
     String html = "";
-    FlutterError? error;
+    WebViewMacOSException? error;
     if (call.method.startsWith("onNavigation")) {
       url = call.arguments["url"] ?? "";
       html = call.arguments["innerHTML"] ?? "";
-      error = call.arguments["error"];
+      error = call.arguments["error"] != null
+          ? WebViewMacOSException.fromMap(call.arguments["error"])
+          : null;
       if (savedCallbacks[call.method] != null) {
         savedCallbacks[call.method]!(url, html, error);
       }

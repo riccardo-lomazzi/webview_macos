@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:webview_macos/exceptions.dart';
 
 import 'webview_macos_method_channel.dart';
 
@@ -28,10 +29,10 @@ abstract class WebviewMacosPlatform extends PlatformInterface {
     String? url,
     bool resetPreviousInstance = true,
     String windowTitle = "",
-    Function(String, String, FlutterError?)? onNavigationStart,
-    Function(String, String, FlutterError?)? onNavigationCommit,
-    Function(String, String, FlutterError?)? onNavigationError,
-    Function(String, String, FlutterError?)? onNavigationFinished,
+    Function(String, String, WebViewMacOSException?)? onNavigationStart,
+    Function(String, String, WebViewMacOSException?)? onNavigationCommit,
+    Function(String, String, WebViewMacOSException?)? onNavigationError,
+    Function(String, String, WebViewMacOSException?)? onNavigationFinished,
     Function()? onWebViewOpened,
     Function()? onWebViewClosed,
     double? windowWidth,

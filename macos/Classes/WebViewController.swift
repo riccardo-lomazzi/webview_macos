@@ -134,16 +134,13 @@ class WebViewController: NSViewController, WKNavigationDelegate {
     }
     
     // Redirect Policy
-//    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-//        if allowRedirect, navigationAction.navigationType == .linkActivated {
-//            guard let url = navigationAction.request.url else {
-//                decisionHandler(.allow)
-//                return
-//            }
-//            webView.load(URLRequest(url: url))
-//        }
-//        decisionHandler(allowRedirect ? .allow : .cancel)
-//    }
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if allowRedirect, navigationAction.navigationType == .linkActivated {
+            guard let url = navigationAction.request.url else { return }
+            webView.load(URLRequest(url: url))
+        }
+        decisionHandler(allowRedirect ? .allow : .cancel)
+    }
     
     func dispose(){
         self.view.disposeOfEverySubview()

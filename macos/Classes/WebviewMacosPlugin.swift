@@ -40,37 +40,6 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate, 
         setupWebViewController()
         setupMethodChannel()
         switch call.method {
-//        case "showWebView":
-//            guard let context = NSApplication.mainFlutterController else {
-//                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find main view controller", details: nil))
-//                return
-//            }
-//            var title: String = "WebView"
-//            var windowSize: CGSize = CGSize.defaultWindowSize
-//            if let arguments = call.arguments as? [Any] {
-//                if let reset: Bool = arguments[1] as? Bool, reset {
-//                    setupWebViewController(reset: true)
-//                }
-//                if let initialURL = arguments[0] as? String, let url = URL(string: initialURL), let webViewController = webViewController {
-//                    webViewController.initialURL = url
-//                    _ = webViewController.loadURL(url: url)
-//                }
-//                if let argTitle = arguments[2] as? String {
-//                    title = argTitle
-//                }
-//                if let argWidth = arguments[3] as? Double {
-//                    windowSize.width = argWidth
-//                }
-//                if let argHeight = arguments[4] as? Double {
-//                    windowSize.height = argHeight
-//                }
-//            }
-//            guard let webViewController = webViewController else {
-//                result(FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find web view controller", details: nil))
-//                return
-//            }
-//            windowController = context.presentInNewWindow(viewController: webViewController, windowTitle: title, windowSize: windowSize)
-//            result(true)
         case "showWebView":
             guard let context = NSApplication.mainFlutterController else {
                 result(["result": false, "error": FlutterError(code: "INVALID_VIEW_CONTROLLER", message: "Could not find main view controller", details: nil)])

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_macos/webview_macos.dart';
+import 'package:webview_macos/exceptions.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,20 +62,20 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         await WebviewMacos.showWebView(
                           url: urlController.text.toLowerCase().trim(),
-                          onNavigationStart:
-                              (String url, String html, FlutterError? error) {
+                          onNavigationStart: (String url, String html,
+                              WebViewMacOSException? error) {
                             setState(() {});
                           },
-                          onNavigationCommit:
-                              (String url, String html, FlutterError? error) {},
-                          onNavigationFinished:
-                              (String url, String html, FlutterError? error) {
+                          onNavigationCommit: (String url, String html,
+                              WebViewMacOSException? error) {},
+                          onNavigationFinished: (String url, String html,
+                              WebViewMacOSException? error) {
                             setState(() {
                               didFinishResult = "CURRENT URL: $url \n" + html;
                             });
                           },
-                          onNavigationError:
-                              (String url, String html, FlutterError? error) {
+                          onNavigationError: (String url, String html,
+                              WebViewMacOSException? error) {
                             setState(() {
                               didFinishResult = "Error: \n" + error.toString();
                             });

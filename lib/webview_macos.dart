@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:webview_macos/exceptions.dart';
 
 import 'webview_macos_platform_interface.dart';
 
@@ -7,10 +8,10 @@ class WebviewMacos {
     String? url,
     bool resetPreviousInstance = true,
     String windowTitle = "WebView",
-    Function(String, String, FlutterError?)? onNavigationStart,
-    Function(String, String, FlutterError?)? onNavigationCommit,
-    Function(String, String, FlutterError?)? onNavigationError,
-    Function(String, String, FlutterError?)? onNavigationFinished,
+    Function(String, String, WebViewMacOSException?)? onNavigationStart,
+    Function(String, String, WebViewMacOSException?)? onNavigationCommit,
+    Function(String, String, WebViewMacOSException?)? onNavigationError,
+    Function(String, String, WebViewMacOSException?)? onNavigationFinished,
     Function()? onWebViewOpened,
     Function()? onWebViewClosed,
     double? windowWidth,
