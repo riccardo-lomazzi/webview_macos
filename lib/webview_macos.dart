@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:webview_macos/exceptions.dart';
 
 import 'webview_macos_platform_interface.dart';
 
-class WebviewMacos {
+class WebViewMacOS {
   static Future<bool> showWebView({
     String? url,
     bool resetPreviousInstance = true,
@@ -17,7 +16,7 @@ class WebviewMacos {
     double? windowWidth,
     double? windowHeight,
   }) async {
-    return WebviewMacosPlatform.instance.showWebView(
+    return WebViewMacOSPlatform.instance.showWebView(
       url: url,
       resetPreviousInstance: resetPreviousInstance,
       windowTitle: windowTitle,
@@ -33,22 +32,22 @@ class WebviewMacos {
   }
 
   static Future<bool> loadURL(String url) {
-    return WebviewMacosPlatform.instance.loadURL(url);
+    return WebViewMacOSPlatform.instance.loadURL(url);
   }
 
   static Future<bool> loadHTMLString(String htmlString) {
-    return WebviewMacosPlatform.instance.loadHTMLString(htmlString);
+    return WebViewMacOSPlatform.instance.loadHTMLString(htmlString);
   }
 
   static Future<String?> evaluateJavaScript(String jsString) {
-    return WebviewMacosPlatform.instance.evaluateJavaScript(jsString);
+    return WebViewMacOSPlatform.instance.evaluateJavaScript(jsString);
   }
 
   static Future<void> dismissWebView() {
-    return WebviewMacosPlatform.instance.dismissWebView();
+    return WebViewMacOSPlatform.instance.dismissWebView();
   }
 
   static Future<bool> isShowing() {
-    return WebviewMacosPlatform.instance.isShowing();
+    return WebViewMacOSPlatform.instance.isShowing();
   }
 }

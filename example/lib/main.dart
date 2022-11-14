@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
                       textColor: Colors.white,
                       child: Text("Open WebView".toUpperCase()),
                       onPressed: () async {
-                        await WebviewMacos.showWebView(
+                        await WebViewMacOS.showWebView(
                           url: urlController.text.toLowerCase().trim(),
                           onNavigationStart: (String url, String html,
                               WebViewMacOSException? error) {
@@ -115,7 +115,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
                 FutureBuilder<bool>(
-                  future: WebviewMacos.isShowing(),
+                  future: WebViewMacOS.isShowing(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError || snapshot.data == false) {
                       return Container();
@@ -138,7 +138,7 @@ class _MyAppState extends State<MyApp> {
                               child: Text("Evaluate Javascript".toUpperCase()),
                               onPressed: () async {
                                 String? result =
-                                    await WebviewMacos.evaluateJavaScript(
+                                    await WebViewMacOS.evaluateJavaScript(
                                         javaScriptController.text.trim());
                                 setState(() {
                                   javascriptResult = result ?? "Error";
@@ -175,7 +175,7 @@ class _MyAppState extends State<MyApp> {
                           textColor: Colors.white,
                           child: Text("Close WebView".toUpperCase()),
                           onPressed: () async {
-                            WebviewMacos.dismissWebView();
+                            WebViewMacOS.dismissWebView();
                           },
                         ),
                       ],

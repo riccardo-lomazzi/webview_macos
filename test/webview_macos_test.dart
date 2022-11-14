@@ -6,7 +6,7 @@ import 'package:webview_macos/webview_macos_platform_interface.dart';
 
 class MockNewWebviewMacosPlatform
     with MockPlatformInterfaceMixin
-    implements WebviewMacosPlatform {
+    implements WebViewMacOSPlatform {
   @override
   Future<void> dismissWebView() {
     throw UnimplementedError();
@@ -55,9 +55,9 @@ class MockNewWebviewMacosPlatform
 }
 
 void main() {
-  final WebviewMacosPlatform initialPlatform = WebviewMacosPlatform.instance;
+  final WebViewMacOSPlatform initialPlatform = WebViewMacOSPlatform.instance;
 
-  test('$MethodChannelWebviewMacos is the default instance', () {
-    expect(initialPlatform, isInstanceOf<MethodChannelWebviewMacos>());
+  test('$MethodChannelWebViewMacOS is the default instance', () {
+    expect(initialPlatform, isInstanceOf<MethodChannelWebViewMacOS>());
   });
 }

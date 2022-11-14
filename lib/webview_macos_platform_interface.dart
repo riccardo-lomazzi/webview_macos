@@ -1,26 +1,25 @@
-import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:webview_macos/exceptions.dart';
 
 import 'webview_macos_method_channel.dart';
 
-abstract class WebviewMacosPlatform extends PlatformInterface {
+abstract class WebViewMacOSPlatform extends PlatformInterface {
   /// Constructs a NewWebviewMacosPlatform.
-  WebviewMacosPlatform() : super(token: _token);
+  WebViewMacOSPlatform() : super(token: _token);
 
   static final Object _token = Object();
 
-  static WebviewMacosPlatform _instance = MethodChannelWebviewMacos();
+  static WebViewMacOSPlatform _instance = MethodChannelWebViewMacOS();
 
-  /// The default instance of [WebviewMacosPlatform] to use.
+  /// The default instance of [WebViewMacOSPlatform] to use.
   ///
-  /// Defaults to [MethodChannelWebviewMacos].
-  static WebviewMacosPlatform get instance => _instance;
+  /// Defaults to [MethodChannelWebViewMacOS].
+  static WebViewMacOSPlatform get instance => _instance;
 
   /// Platform-specific implementations should set this with their own
-  /// platform-specific class that extends [WebviewMacosPlatform] when
+  /// platform-specific class that extends [WebViewMacOSPlatform] when
   /// they register themselves.
-  static set instance(WebviewMacosPlatform instance) {
+  static set instance(WebViewMacOSPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }

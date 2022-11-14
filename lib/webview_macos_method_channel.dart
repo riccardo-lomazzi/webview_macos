@@ -4,8 +4,8 @@ import 'package:webview_macos/exceptions.dart';
 
 import 'webview_macos_platform_interface.dart';
 
-/// An implementation of [WebviewMacosPlatform] that uses method channels.
-class MethodChannelWebviewMacos extends WebviewMacosPlatform {
+/// An implementation of [WebViewMacOSPlatform] that uses method channels.
+class MethodChannelWebViewMacOS extends WebViewMacOSPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('webview_macos_plugin');

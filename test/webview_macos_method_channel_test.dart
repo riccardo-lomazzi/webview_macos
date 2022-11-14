@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:webview_macos/webview_macos_method_channel.dart';
 
 void main() {
-  MethodChannelWebviewMacos platform = MethodChannelWebviewMacos();
+  MethodChannelWebViewMacOS platform = MethodChannelWebViewMacOS();
   const MethodChannel channel = MethodChannel('webview_macos_plugin');
 
   TestWidgetsFlutterBinding.ensureInitialized();

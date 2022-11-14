@@ -1,6 +1,6 @@
 ## 0.0.3
 
-* Changes on Navigation Policies
+* Changed main methods structure
 
 ## 0.0.2
 
