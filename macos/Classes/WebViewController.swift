@@ -97,6 +97,19 @@ class WebViewController: NSViewController, WKNavigationDelegate {
         }
     }
     
+    func clearCookies(completionHandler: @escaping () -> Void) {
+        // elimina cache webview
+        let websiteDataTypes = Set<String>([WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache, WKWebsiteDataTypeCookies, WKWebsiteDataTypeFetchCache, WKWebsiteDataTypeLocalStorage, WKWebsiteDataTypeSessionStorage])
+        
+        let dataStore = WKWebsiteDataStore.default()
+        
+        dataStore.fetchDataRecords(ofTypes: websiteDataTypes) { dataRecords in
+            dataStore.removeData(ofTypes: websiteDataTypes, for: dataRecords) {
+                completionHandler()
+            }
+        }
+    }
+    
     // Request start
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!){
         webView.getInnerHTML { innerHTML, error in

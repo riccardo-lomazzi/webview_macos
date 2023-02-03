@@ -52,6 +52,10 @@ abstract class WebViewMacOSPlatform extends PlatformInterface {
     throw UnimplementedError('evaluateJavaScript() has not been implemented.');
   }
 
+  Future<bool> clearDataStore() {
+    throw UnimplementedError('clearDataStore() has not been implemented.');
+  }
+
   Future<bool> isShowing() {
     throw UnimplementedError('isShowing() has not been implemented.');
   }

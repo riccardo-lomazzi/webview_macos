@@ -94,6 +94,11 @@ class MethodChannelWebViewMacOS extends WebViewMacOSPlatform {
   }
 
   @override
+  Future<bool> clearDataStore() async {
+    return await methodChannel.invokeMethod("clearDataStore") ?? false;
+  }
+
+  @override
   Future<void> dismissWebView() async {
     final _ = await methodChannel.invokeMethod('dismissWebView');
     return;

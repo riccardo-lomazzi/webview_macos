@@ -52,6 +52,11 @@ class MockNewWebviewMacosPlatform
   Future<bool> isShowing() {
     throw UnimplementedError();
   }
+
+  @override
+  Future<bool> clearDataStore() {
+    throw UnimplementedError();
+  }
 }
 
 void main() {

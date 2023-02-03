@@ -47,6 +47,10 @@ class WebViewMacOS {
     return WebViewMacOSPlatform.instance.dismissWebView();
   }
 
+  static Future<bool> clearDataStore() {
+    return WebViewMacOSPlatform.instance.clearDataStore();
+  }
+
   static Future<bool> isShowing() {
     return WebViewMacOSPlatform.instance.isShowing();
   }

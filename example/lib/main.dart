@@ -170,13 +170,32 @@ class _MyAppState extends State<MyApp> {
                             ],
                           ),
                         ),
-                        MaterialButton(
-                          color: Colors.blue,
-                          textColor: Colors.white,
-                          child: Text("Close WebView".toUpperCase()),
-                          onPressed: () async {
-                            WebViewMacOS.dismissWebView();
-                          },
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            MaterialButton(
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                              child: Text("Clear Data Store".toUpperCase()),
+                              onPressed: () async {
+                                bool result =
+                                    await WebViewMacOS.clearDataStore();
+                                if (result) {
+                                  setState(() {
+                                    javascriptResult = "Cleared Data Store";
+                                  });
+                                }
+                              },
+                            ),
+                            MaterialButton(
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                              child: Text("Close WebView".toUpperCase()),
+                              onPressed: () async {
+                                WebViewMacOS.dismissWebView();
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     );

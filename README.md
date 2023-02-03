@@ -1,6 +1,6 @@
-# WebView MacOS
+# WebView macOS
 
-Flutter stub implementation of WKWebView for MacOS.
+```Flutter``` stub implementation of ```WKWebView``` for ```macOS```.
 Feel free to fork this repository and improve it!
 
 ## Getting Started
@@ -13,26 +13,25 @@ Feel free to fork this repository and improve it!
 
 ## Basic usage
 
-Call ```showWebView(String initialURL)``` to show a WKWebView in a new window.
+Call ```showWebView(String initialURL)``` to show a ```WKWebView``` in a new window.
 
 ```
-WebviewMacos().showWebView("https://github.com");
+WebViewMacOS.showWebView("https://github.com");
 ```
 
-Call ```loadURL(String URL)``` or ```loadHTMLString(String htmlString)``` to load a new URL or a HTML page, respectively.
+Call ```WebViewMacOS.loadURL(String URL)``` or ```WebViewMacOS.loadHTMLString(String htmlString)``` to load a new URL or a HTML page, respectively.
 
-Call ```evaluateJavaScript(String javascriptString)``` to evaluate a Javascript string and return the result.
+Call ```WebViewMacOS.evaluateJavaScript(String javascriptString)``` to evaluate a Javascript string and return the result.
 ```
-final String? result = await WebviewMacos().evaluateJavaScript("document.getElementByName('div').innerHTML");
+final String? result = await WebViewMacOS.evaluateJavaScript("document.getElementByName('div').innerHTML");
 ```
+Call ```WebViewMacOS.clearDataStore()``` to clear all the cookies, local and session storage.
 
 
 ## Limitations and notes
 
-- Multiple instances of the webview are not currently supported.
-- The ```WebView``` object isn't fully customizable, it is limited to "cache reset" single requests.
-- There isn't a ```WebViewController``` object to manage the WebView lifecycle, instead you have to call the single methods.
-- Currently the ```Webview``` is limited to run in a new ```NSWindow```. Future developments will include the chance to present the WebView in various ways, such as ```presentAsSheet```.
+- Due to a ```Texture``` limitation on macOS Flutter engine, ```WKWebView``` is limited to run in a new ```NSWindow```.
+- Multiple instances of the webview are currently not supported. 
 
 ## License
 

@@ -128,7 +128,9 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate, 
                 }
             }
             
-            let newWindowController: NSWindowController = context.presentInNewWindow(viewController: webViewController, windowTitle: title, windowSize: windowSize)
+            self.webViewController = webViewController // shouldn't be necessary since WebViewController is a class, so the initial "guard let" should store a reference, but without this assignment, the variable would still be uninitialized
+            
+            let newWindowController: NSWindowController = context.presentInNewWindow(viewController: self.webViewController!, windowTitle: title, windowSize: windowSize)
             newWindowController.window?.delegate = self
             windowController = newWindowController
             result(["result" : true, "error": nil])
@@ -155,6 +157,15 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate, 
                 } else {
                     result($0)
                 }
+            }
+        case "clearDataStore":
+            guard let webViewController = webViewController else {
+                result(FlutterError(code: "INVALID_WEBVIEW", message: "WebView not found", details: nil))
+                return
+            }
+            webViewController.clearCookies {
+                result(true)
+                return
             }
         case "isShowing":
             result(self.windowIsOpen)

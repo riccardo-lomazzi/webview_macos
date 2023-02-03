@@ -1,3 +1,8 @@
+## 0.0.4
+* Fixed a bug where requests could fail with an ```INVALID_WEBVIEW``` error
+* implemented ```clearDataStore()``` method to clear cookies, local and session storage
+* updated ```README.md``` and ```example```
+
 ## 0.0.3
 
 * Changed main methods structure
