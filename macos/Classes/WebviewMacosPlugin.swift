@@ -184,6 +184,12 @@ public class WebviewMacosPlugin: NSObject, FlutterPlugin, WKNavigationDelegate, 
         }
     }
     
+    public func windowDidResize(_ notification: Notification) {
+        if let _ = self.windowController, let webViewController = self.webViewController {
+            webViewController.windowDidResize(notification)
+        }
+    }
+    
     public func windowWillClose(_ notification: Notification) {
         self.windowIsOpen = false
         if let methodChannel = self.methodChannel {

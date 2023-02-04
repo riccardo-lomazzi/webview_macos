@@ -155,9 +155,14 @@ class WebViewController: NSViewController, WKNavigationDelegate {
         decisionHandler(allowRedirect ? .allow : .cancel)
     }
     
+    public func windowDidResize(_ notification: Notification) {
+        self.webView.frame = self.view.frame
+    }
+    
     func dispose(){
         self.view.disposeOfEverySubview()
     }
+    
 }
 
 struct WebViewError: Error {

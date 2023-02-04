@@ -1,3 +1,5 @@
+## 0.0.5
+* Implemented ```windowDidResize``` delegate method so that the ```WKWebView``` will resize according to the ```NSWindow``` size changes.
 ## 0.0.4
 * Fixed a bug where requests could fail with an ```INVALID_WEBVIEW``` error
 * implemented ```clearDataStore()``` method to clear cookies, local and session storage
