@@ -1,3 +1,5 @@
+## 0.0.6
+* Added compatibility for macOS 10.13
 ## 0.0.5
 * Implemented ```windowDidResize``` delegate method so that the ```WKWebView``` will resize according to the ```NSWindow``` size changes.
 ## 0.0.4

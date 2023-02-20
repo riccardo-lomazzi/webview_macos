@@ -99,7 +99,11 @@ class WebViewController: NSViewController, WKNavigationDelegate {
     
     func clearCookies(completionHandler: @escaping () -> Void) {
         // elimina cache webview
-        let websiteDataTypes = Set<String>([WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache, WKWebsiteDataTypeCookies, WKWebsiteDataTypeFetchCache, WKWebsiteDataTypeLocalStorage, WKWebsiteDataTypeSessionStorage])
+        var websiteDataTypes = Set<String>([WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache, WKWebsiteDataTypeCookies, WKWebsiteDataTypeLocalStorage, WKWebsiteDataTypeSessionStorage])
+        
+        if #available(macOS 10.13.4, *) {
+            websiteDataTypes.insert(WKWebsiteDataTypeFetchCache)
+        }
         
         let dataStore = WKWebsiteDataStore.default()
         
